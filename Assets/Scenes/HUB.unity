@@ -708,205 +708,82 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cam: {fileID: 611116832}
   parallaxEffect: 0.1
---- !u!1 &118399671
-GameObject:
+--- !u!1001 &217181018
+PrefabInstance:
   m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 118399672}
-  - component: {fileID: 118399675}
-  - component: {fileID: 118399674}
-  - component: {fileID: 118399673}
-  - component: {fileID: 118399677}
-  - component: {fileID: 118399678}
-  m_Layer: 0
-  m_Name: NPC1
-  m_TagString: Interactable
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &118399672
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 118399671}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.076, y: -0.974, z: 0}
-  m_LocalScale: {x: 0.7, y: 0.7, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 596508075}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!95 &118399673
-Animator:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 118399671}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 28eef2154b2206a43a22f1ba4dc93ba0, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
---- !u!50 &118399674
-Rigidbody2D:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 118399671}
-  m_BodyType: 0
-  m_Simulated: 1
-  m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDrag: 0
-  m_AngularDrag: 0.05
-  m_GravityScale: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 7
---- !u!212 &118399675
-SpriteRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 118399671}
-  m_Enabled: 1
-  m_CastShadows: 0
-  m_ReceiveShadows: 0
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 0
-  m_RayTraceProcedural: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 0
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_Sprite: {fileID: 690894705, guid: ad3eeb33a38f2e743a434dca345848b3, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_FlipX: 0
-  m_FlipY: 0
-  m_DrawMode: 0
-  m_Size: {x: 0.18, y: 0.34}
-  m_AdaptiveModeThreshold: 0.5
-  m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
-  m_SpriteSortPoint: 0
---- !u!61 &118399677
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 118399671}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.18, y: 0.34}
-    newSize: {x: 0.18, y: 0.34}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 0.18, y: 0.34}
-  m_EdgeRadius: 0
---- !u!114 &118399678
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 118399671}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a317f4f88fbbba946b73c75e3d59a927, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  interactionPopup: {fileID: 365143901}
-  dialogueText: {fileID: 84953404}
-  dialogues:
-  - Welcome to the Pavelas!
-  - If you're looking for bikes to steal there ain't any anymore
-  - There's a weird looking portal to the right
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 596508075}
+    m_Modifications:
+    - target: {fileID: 4055668622110401586, guid: cfc43e12db4c13a4dba1709f8d7edec7, type: 3}
+      propertyPath: dialogues.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4055668622110401586, guid: cfc43e12db4c13a4dba1709f8d7edec7, type: 3}
+      propertyPath: dialogues.Array.data[0]
+      value: Hello Stype.
+      objectReference: {fileID: 0}
+    - target: {fileID: 4055668622110401586, guid: cfc43e12db4c13a4dba1709f8d7edec7, type: 3}
+      propertyPath: dialogues.Array.data[1]
+      value: bla bla bla
+      objectReference: {fileID: 0}
+    - target: {fileID: 4055668622110401586, guid: cfc43e12db4c13a4dba1709f8d7edec7, type: 3}
+      propertyPath: dialogues.Array.data[2]
+      value: Idi desno
+      objectReference: {fileID: 0}
+    - target: {fileID: 5031387204730079916, guid: cfc43e12db4c13a4dba1709f8d7edec7, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -1.038
+      objectReference: {fileID: 0}
+    - target: {fileID: 5031387204730079916, guid: cfc43e12db4c13a4dba1709f8d7edec7, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.972
+      objectReference: {fileID: 0}
+    - target: {fileID: 5031387204730079916, guid: cfc43e12db4c13a4dba1709f8d7edec7, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5031387204730079916, guid: cfc43e12db4c13a4dba1709f8d7edec7, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5031387204730079916, guid: cfc43e12db4c13a4dba1709f8d7edec7, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5031387204730079916, guid: cfc43e12db4c13a4dba1709f8d7edec7, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5031387204730079916, guid: cfc43e12db4c13a4dba1709f8d7edec7, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5031387204730079916, guid: cfc43e12db4c13a4dba1709f8d7edec7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5031387204730079916, guid: cfc43e12db4c13a4dba1709f8d7edec7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5031387204730079916, guid: cfc43e12db4c13a4dba1709f8d7edec7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8338554763144665645, guid: cfc43e12db4c13a4dba1709f8d7edec7, type: 3}
+      propertyPath: m_Name
+      value: NPC1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4920344186548552349, guid: cfc43e12db4c13a4dba1709f8d7edec7, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 0}
+  m_SourcePrefab: {fileID: 100100000, guid: cfc43e12db4c13a4dba1709f8d7edec7, type: 3}
 --- !u!1 &239131061
 GameObject:
   m_ObjectHideFlags: 0
@@ -1408,11 +1285,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a317f4f88fbbba946b73c75e3d59a927, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  interactionPopup: {fileID: 365143901}
-  dialogueText: {fileID: 84953404}
-  dialogues:
-  - Got some watermelon?
-  - Any KFC?
 --- !u!61 &352932608
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1845,7 +1717,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 118399672}
+  - {fileID: 1082045442}
   - {fileID: 1268938437}
   - {fileID: 1585842335}
   - {fileID: 352932603}
@@ -1938,7 +1810,7 @@ Transform:
   m_GameObject: {fileID: 611116832}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -28.873453, y: -4.446, z: -10.0216}
+  m_LocalPosition: {x: -26.428286, y: -4.455, z: -10.0216}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1992,11 +1864,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4880682273096394224, guid: 4b15447cd05f47f478da17868f43e7ee, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -29.651
+      value: -27.145
       objectReference: {fileID: 0}
     - target: {fileID: 4880682273096394224, guid: 4b15447cd05f47f478da17868f43e7ee, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -4.978
+      value: -4.987
       objectReference: {fileID: 0}
     - target: {fileID: 4880682273096394224, guid: 4b15447cd05f47f478da17868f43e7ee, type: 3}
       propertyPath: m_LocalPosition.z
@@ -2111,7 +1983,7 @@ Transform:
   m_GameObject: {fileID: 776500693}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -28.873453, y: -4.446, z: -10.0216}
+  m_LocalPosition: {x: -26.428286, y: -4.455, z: -10.0216}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2613,6 +2485,11 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!4 &1082045442 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5031387204730079916, guid: cfc43e12db4c13a4dba1709f8d7edec7, type: 3}
+  m_PrefabInstance: {fileID: 217181018}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1160927628
 GameObject:
   m_ObjectHideFlags: 0
@@ -2929,23 +2806,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a317f4f88fbbba946b73c75e3d59a927, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  interactionPopup: {fileID: 365143901}
-  dialogueText: {fileID: 84953404}
-  dialogues:
-  - Go AWAY!!!
-  - Did u not hear me?
-  - We are going to have a problem.
-  - ....
-  - U are still here?
-  - I will shank you.
-  - WHY ARE U NOT LISTENING.
-  - Alright u are tenacious, come closer...
-  - There is this entity, called silent....
-  - Silent Peace, u will know when u see him.
-  - Luckily u have a cape so he can't steal your hair.
-  - Im sure you've seen Steve at the entrance.
-  - Silent Peace stole all his hair follicles
-  - Be sure to run if u ever see him...
 --- !u!61 &1268938443
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -3519,18 +3379,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a317f4f88fbbba946b73c75e3d59a927, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  interactionPopup: {fileID: 365143901}
-  dialogueText: {fileID: 84953404}
-  dialogues:
-  - ..................
-  - ..................
-  - ..................
-  - ..................
-  - ..................
-  - ..................
-  - ..................
-  - There's a secret on top of the building...
-  - I won't tell u how to get up though
 --- !u!61 &1585842340
 BoxCollider2D:
   m_ObjectHideFlags: 0
