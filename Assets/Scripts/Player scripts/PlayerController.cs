@@ -24,6 +24,9 @@ public class PlayerController : MonoBehaviour
     private bool isBlocking = false;
     private PlayerStats playerStats;
     private AudioSource audioSource;
+    private int attackComboStage = 0;
+    private float comboTimer = 0;
+    private const float maxComboDelay = 0.5f;
 
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] private Transform groundCheck;
@@ -71,7 +74,7 @@ public class PlayerController : MonoBehaviour
         HeavyAttack();
         GunAttack();
         MagicAttack();
-        Attack();
+        AttackComboHandler();
     }
 
     private void FixedUpdate()
@@ -81,6 +84,7 @@ public class PlayerController : MonoBehaviour
     private void HandleInput()
     {
         horizontal = Input.GetAxisRaw("Horizontal");
+      
 
         if (Input.GetKeyDown(KeyCode.LeftShift) && Time.time > lastDashTime + dashCooldown && !isDashing)
         {
@@ -121,44 +125,39 @@ public class PlayerController : MonoBehaviour
         {
             ToggleSleep();
         }
+        if (comboTimer > 0)
+        {
+            comboTimer -= Time.deltaTime;
+            if (comboTimer <= 0 && attackComboStage != 0)
+            {
+                attackComboStage = 0;  // Reset combo if time runs out
+            }
+        }
     }
 
     private void HandleMovement()
     {
-        if (isDashing)  // Skip normal movement processing while dashing
+        if (isDashing)  // Skip movement processing while dashing
         {
-            // Optionally reduce movement speed or prevent movement altogether while blocking
             return;
         }
 
-        float move = horizontal * speed;
+        float move = horizontal * speed * runningMultiplier; // Always apply running multiplier
         bool isMoving = Mathf.Abs(move) > 0;
-        bool isRunning = isMoving && Input.GetKey(KeyCode.LeftControl);
 
-        // Apply the running multiplier if the character is running
-        if (isRunning)
-        {
-            move *= runningMultiplier;
-        }
-
-        // Update the speed in the animator to handle walking/running animations.
+        // Update the Rigidbody velocity for constant running speed
         rb.velocity = new Vector2(move, rb.velocity.y);
         animator.SetFloat("Speed", Mathf.Abs(move));
-        animator.SetBool("IsRunning", isRunning);
-        animator.SetBool("IsWalking", isMoving && !isRunning);
+        animator.SetBool("IsRunning", isMoving); // Use IsRunning to indicate movement
 
-        // Flip the character to face the direction of movement.
+        // Flip the character to face the direction of movement
         Flip();
-        // Handle grounded state for jumping and falling animations.
+
+        // Handle grounded state for jumping and falling animations
         animator.SetBool("Grounded", IsGrounded());
 
-        // Play walking sound if moving and grounded, not already playing the walking sound, and not running
-        if (isMoving && IsGrounded() && !isRunning && audioSource.clip == walkingSound && !audioSource.isPlaying)
-        {
-            audioSource.pitch = 1.0f; // Normal pitch for walking
-            audioSource.Play();
-        }
-        else if (isRunning && IsGrounded() && (audioSource.clip != runningSound || !audioSource.isPlaying))
+        // Play running sound if moving and grounded
+        if (isMoving && IsGrounded() && !audioSource.isPlaying)
         {
             audioSource.clip = runningSound;
             audioSource.pitch = 1.5f; // Increased pitch for faster playback
@@ -168,13 +167,8 @@ public class PlayerController : MonoBehaviour
         {
             audioSource.Stop();
         }
-        // If the state changes (from walking to running or vice versa), change the clip and play it
-        else if (isMoving && IsGrounded() && ((isRunning && audioSource.clip != runningSound) || (!isRunning && audioSource.clip != walkingSound)))
-        {
-            audioSource.clip = isRunning ? runningSound : walkingSound;
-            audioSource.Play();
-        }
     }
+
 
 
     private IEnumerator Dash()
@@ -198,13 +192,16 @@ public class PlayerController : MonoBehaviour
         if (IsGrounded())
         {
             rb.velocity = new Vector2(rb.velocity.x, jumpingPower);
-            animator.SetTrigger("Jump");  // Activate the Jump trigger in the Animator
+            // Removed the animator.SetTrigger("Jump") line
         }
     }
 
     private void CutJumpShort()
     {
-        rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * 0.5f);
+        if (rb.velocity.y > 0) // You could add this check if you haven't already.
+        {
+            rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * 0.5f);
+        }
     }
 
     private void Flip()
@@ -296,14 +293,24 @@ public class PlayerController : MonoBehaviour
     {
         isMagicAttacking = false;
     }
-    private void Attack()
+    private void AttackComboHandler()
+{
+    if (Input.GetKeyDown(attackKey) && !isDashing)
     {
-        if (Input.GetKeyDown(attackKey) && !isDashing && !isAttacking && !isJumpAttacking)
+        if (attackComboStage == 0 || comboTimer > 0)
         {
-            isAttacking = true;
-            animator.SetTrigger("Attack");
+            attackComboStage = (attackComboStage % 3) + 1;  // Cycle through 1, 2, 3
+            animator.SetTrigger("Attack" + attackComboStage);  // This should match the triggers set in the Animator
+            comboTimer = maxComboDelay;  // Reset the combo timer
+
+            // Apply a small forward movement
+            float attackMoveDistance = 0.5f; // Adjust the distance as needed
+            float direction = isFacingRight ? 1 : -1;
+            rb.AddForce(new Vector2(direction * attackMoveDistance, 0), ForceMode2D.Impulse);
         }
     }
+}
+
 
     public void ResetAttack()
     {
@@ -352,21 +359,17 @@ public class PlayerController : MonoBehaviour
     }
     private void DealDamage(float damage)
     {
-        // Assume a radius and forward distance where the attack occurs
         float attackRadius = 1f;
         Vector2 attackPosition = (Vector2)transform.position + (Vector2.right * transform.localScale.x * 0.5f);
-
-        // Using OverlapCircleAll to detect enemies around the attack point
         Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPosition, attackRadius);
         foreach (Collider2D enemy in hitEnemies)
         {
-            if (enemy.CompareTag("Enemy"))  // Ensure enemies are tagged correctly
+            if (enemy.CompareTag("Enemy"))  
             {
                 EnemyStats enemyStats = enemy.GetComponent<EnemyStats>();
                 if (enemyStats != null)
                 {
-                    // Cast the damage to int since the TakeDamage method in EnemyStats expects an int
-                    // The attack source is the player's current position
+
                     enemyStats.TakeDamage((int)damage, transform.position);
                     Debug.Log($"Dealt {damage} damage to {enemy.name}.");
                 }

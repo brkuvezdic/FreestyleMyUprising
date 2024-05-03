@@ -17,10 +17,10 @@ TagManager:
   - UI
   - Ground
   - Ladder
-  - Wall
+  - Player
   - Bounds
   - Enemy
-  - Player
+  - Wall
   - 
   - 
   - 

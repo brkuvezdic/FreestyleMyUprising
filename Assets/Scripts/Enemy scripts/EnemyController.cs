@@ -6,10 +6,10 @@ public class EnemyController : MonoBehaviour
 {
     public float patrolSpeed = 0.5f;
     public Transform edgeDetection;
-    public float attackCooldown = 2f;
-    public float detectionRange = 5f;
+    public float attackCooldown = 4f;
+    public float detectionRange = 0.7f;
     public Transform player;
-    public float attackRange = 3f;
+    public float attackRange = 0.7f;
 
     private bool movingRight = true;
     private float groundDistance = 1f;

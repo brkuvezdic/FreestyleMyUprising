@@ -193,7 +193,7 @@ Transform:
   m_GameObject: {fileID: 159863912}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -32.480022, y: -2.543, z: -10.0216}
+  m_LocalPosition: {x: -31.892262, y: -2.543, z: -10.0216}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -208,6 +208,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4701962853277261503, guid: 4b15447cd05f47f478da17868f43e7ee, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.0102
+      objectReference: {fileID: 0}
+    - target: {fileID: 4701962853277261503, guid: 4b15447cd05f47f478da17868f43e7ee, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.0052
+      objectReference: {fileID: 0}
     - target: {fileID: 4810058417461029183, guid: 4b15447cd05f47f478da17868f43e7ee, type: 3}
       propertyPath: m_Name
       value: Player
@@ -344,7 +352,7 @@ Transform:
   m_GameObject: {fileID: 750592218}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -32.480022, y: -2.543, z: -10.0216}
+  m_LocalPosition: {x: -31.892262, y: -2.543, z: -10.0216}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -51830,7 +51838,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!82 &1851770725
 AudioSource:
   m_ObjectHideFlags: 0
@@ -52041,6 +52049,10 @@ PrefabInstance:
     - target: {fileID: 3413698208798983513, guid: be2b4502d76c5834b94db7e753e27eec, type: 3}
       propertyPath: m_Name
       value: Enemy
+      objectReference: {fileID: 0}
+    - target: {fileID: 3413698208798983513, guid: be2b4502d76c5834b94db7e753e27eec, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6160859398805332935, guid: be2b4502d76c5834b94db7e753e27eec, type: 3}
       propertyPath: player
