@@ -193,7 +193,7 @@ Transform:
   m_GameObject: {fileID: 159863912}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -31.892262, y: -2.543, z: -10.0216}
+  m_LocalPosition: {x: -32.142006, y: -2.543, z: -10.0216}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -260,6 +260,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5335996642365573591, guid: 4b15447cd05f47f478da17868f43e7ee, type: 3}
+      propertyPath: attackSound
+      value: 
+      objectReference: {fileID: 8300000, guid: f609995ddf18554438c0c2899a9085fe, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -352,7 +356,7 @@ Transform:
   m_GameObject: {fileID: 750592218}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -31.892262, y: -2.543, z: -10.0216}
+  m_LocalPosition: {x: -32.142006, y: -2.543, z: -10.0216}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -52052,7 +52056,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3413698208798983513, guid: be2b4502d76c5834b94db7e753e27eec, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6160859398805332935, guid: be2b4502d76c5834b94db7e753e27eec, type: 3}
       propertyPath: player

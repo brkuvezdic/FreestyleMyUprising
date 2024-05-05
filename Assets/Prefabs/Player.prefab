@@ -187,6 +187,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3b5da5ecf20fc842ae26a1eda889a23, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  movementAudioSource: {fileID: 0}
+  attackAudioSource: {fileID: 0}
   rb: {fileID: 4432305869767806865}
   groundCheck: {fileID: 4701962853277261503}
   groundlayer:
@@ -200,9 +202,16 @@ MonoBehaviour:
   teleportDistance: 1
   walkingSound: {fileID: 8300000, guid: 02dc709a1e386674e8d05d3c04baa6f7, type: 3}
   runningSound: {fileID: 8300000, guid: 02dc709a1e386674e8d05d3c04baa6f7, type: 3}
+  heavyAttackSound: {fileID: 8300000, guid: 23d80b5297162e9459fea98d1bec36f4, type: 3}
+  gunAttackSound: {fileID: 8300000, guid: e70eb034c8ae4fe42b00d809716998e4, type: 3}
+  magicAttackSound: {fileID: 8300000, guid: 8cc8b62211f9fa149b63f3032ed815b0, type: 3}
+  attackComboSounds:
+  - {fileID: 8300000, guid: f609995ddf18554438c0c2899a9085fe, type: 3}
   baseHeavyAttackDamage: 20
   baseGunAttackDamage: 15
   baseMagicAttackDamage: 25
+  movementVolume: 0.02
+  attackVolume: 0.01
 --- !u!114 &1984012603499055371
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -4,8 +4,8 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     private float horizontal;
-    private float speed = 0.7f;  
-    private float runningMultiplier = 1.3f;  
+    private float speed = 0.7f;
+    private float runningMultiplier = 1.3f;
     private float jumpingPower = 2f;
     private bool isFacingRight = true;
     private bool isDashing = false;
@@ -16,17 +16,15 @@ public class PlayerController : MonoBehaviour
     private bool isHeavyAttacking = false;
     private bool isGunAttacking = false;
     private bool isMagicAttacking = false;
-    private Animator animator;
     private bool isAttacking = false;
     private bool isJumpAttacking = false;
     private bool isClimbing = false;
     private bool isSleeping = false;
     private bool isBlocking = false;
     private PlayerStats playerStats;
-    private AudioSource audioSource;
-    private int attackComboStage = 0;
-    private float comboTimer = 0;
-    private const float maxComboDelay = 0.5f;
+    [SerializeField] private AudioSource movementAudioSource;
+    [SerializeField] private AudioSource attackAudioSource;
+    private Animator animator;
 
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] private Transform groundCheck;
@@ -39,34 +37,45 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float teleportDistance = 3f;
     [SerializeField] private AudioClip walkingSound;
     [SerializeField] private AudioClip runningSound;
+    [SerializeField] private AudioClip heavyAttackSound;
+    [SerializeField] private AudioClip gunAttackSound;
+    [SerializeField] private AudioClip magicAttackSound;
+    [SerializeField] private AudioClip attackSound;
 
-
-    //attack Damage values mogu se mijenjat kasnije
     [SerializeField] private float baseHeavyAttackDamage = 20f;
     [SerializeField] private float baseGunAttackDamage = 15f;
     [SerializeField] private float baseMagicAttackDamage = 25f;
+    [SerializeField] private float baseAttackDamage = 10f; 
+    [SerializeField] private float movementVolume = 1f;
+    [SerializeField] private float attackVolume = 1f;
+
 
     void Start()
     {
-        audioSource = GetComponent<AudioSource>();
-        if (audioSource == null)
-        {
-            Debug.LogWarning("AudioSource component not found on the player! Adding one.");
-            audioSource = gameObject.AddComponent<AudioSource>();
-        }
-        audioSource.playOnAwake = false;
-        audioSource.loop = false;
+        movementAudioSource = gameObject.AddComponent<AudioSource>();
+        movementAudioSource.playOnAwake = false;
+        movementAudioSource.loop = false;
+        movementAudioSource.volume = movementVolume;
+
+        attackAudioSource = gameObject.AddComponent<AudioSource>();
+        attackAudioSource.playOnAwake = false;
+        attackAudioSource.loop = false;
+        attackAudioSource.volume = attackVolume;
+
         animator = GetComponent<Animator>();
+        playerStats = GetComponent<PlayerStats>();
+
         if (animator == null)
         {
             Debug.LogWarning("Animator component not found on the player!");
         }
-        playerStats = GetComponent<PlayerStats>();
+
         if (playerStats == null)
         {
             Debug.LogWarning("PlayerStats component not found on the player!");
         }
     }
+
 
     void Update()
     {
@@ -74,17 +83,17 @@ public class PlayerController : MonoBehaviour
         HeavyAttack();
         GunAttack();
         MagicAttack();
-        AttackComboHandler();
+        Attack();
     }
 
     private void FixedUpdate()
     {
         HandleMovement();
     }
+
     private void HandleInput()
     {
         horizontal = Input.GetAxisRaw("Horizontal");
-      
 
         if (Input.GetKeyDown(KeyCode.LeftShift) && Time.time > lastDashTime + dashCooldown && !isDashing)
         {
@@ -101,71 +110,65 @@ public class PlayerController : MonoBehaviour
         {
             CutJumpShort();
         }
+
         if (Input.GetKeyDown(KeyCode.E))
         {
             InteractWithObject();
         }
+
         if (Input.GetKeyDown(blockKey))
         {
             StartBlock();
         }
+
         if (Input.GetKeyUp(blockKey))
         {
             EndBlock();
         }
+
         if (Input.GetKeyDown(KeyCode.J) && !IsGrounded())
         {
             PerformJumpAttack();
         }
+
         if (Input.GetKeyDown(KeyCode.V))
         {
             PerformTeleport();
         }
+
         if (Input.GetKeyDown(KeyCode.N))
         {
             ToggleSleep();
-        }
-        if (comboTimer > 0)
-        {
-            comboTimer -= Time.deltaTime;
-            if (comboTimer <= 0 && attackComboStage != 0)
-            {
-                attackComboStage = 0;  // Reset combo if time runs out
-            }
         }
     }
 
     private void HandleMovement()
     {
-        if (isDashing)  // Skip movement processing while dashing
+        if (isDashing)
         {
             return;
         }
 
-        float move = horizontal * speed * runningMultiplier; // Always apply running multiplier
+        float move = horizontal * speed * runningMultiplier;
         bool isMoving = Mathf.Abs(move) > 0;
 
-        // Update the Rigidbody velocity for constant running speed
         rb.velocity = new Vector2(move, rb.velocity.y);
         animator.SetFloat("Speed", Mathf.Abs(move));
-        animator.SetBool("IsRunning", isMoving); // Use IsRunning to indicate movement
+        animator.SetBool("IsRunning", isMoving);
 
-        // Flip the character to face the direction of movement
         Flip();
-
-        // Handle grounded state for jumping and falling animations
         animator.SetBool("Grounded", IsGrounded());
 
-        // Play running sound if moving and grounded
-        if (isMoving && IsGrounded() && !audioSource.isPlaying)
+        if (isMoving && IsGrounded() && !movementAudioSource.isPlaying)
         {
-            audioSource.clip = runningSound;
-            audioSource.pitch = 1.5f; // Increased pitch for faster playback
-            audioSource.Play();
+            movementAudioSource.clip = runningSound;
+            movementAudioSource.volume = movementVolume;
+            movementAudioSource.pitch = 1.5f;
+            movementAudioSource.Play();
         }
         else if (!isMoving || !IsGrounded())
         {
-            audioSource.Stop();
+            movementAudioSource.Stop();
         }
     }
 
@@ -238,6 +241,7 @@ public class PlayerController : MonoBehaviour
             interactable = null;
         }
     }
+
     private void InteractWithObject()
     {
         if (interactable != null)
@@ -249,13 +253,17 @@ public class PlayerController : MonoBehaviour
             Debug.Log("No interactable object found.");
         }
     }
+
     private void HeavyAttack()
     {
         if (Input.GetKeyDown(heavyAttackKey) && !isDashing && !isHeavyAttacking) // Add other conditions as needed
         {
             isHeavyAttacking = true;
             animator.SetTrigger("HeavyAttack");
-            // Notice how we're not dealing damage here anymore
+
+            attackAudioSource.clip = heavyAttackSound;
+            attackAudioSource.volume = attackVolume;
+            attackAudioSource.Play();
         }
     }
 
@@ -263,12 +271,18 @@ public class PlayerController : MonoBehaviour
     {
         isHeavyAttacking = false;
     }
+
     private void GunAttack()
     {
         if (Input.GetKeyDown(gunAttackKey) && !isDashing && !isGunAttacking)
         {
             isGunAttacking = true;
             animator.SetTrigger("GunAttack");
+
+            attackAudioSource.clip = gunAttackSound;
+            attackAudioSource.volume = attackVolume;
+            attackAudioSource.Play();
+
             float totalDamage = baseGunAttackDamage + playerStats.physicalDamage;
             DealDamage(totalDamage);
         }
@@ -278,12 +292,18 @@ public class PlayerController : MonoBehaviour
     {
         isGunAttacking = false;
     }
+
     private void MagicAttack()
     {
         if (Input.GetKeyDown(magicAttackKey) && !isDashing && !isMagicAttacking)
         {
             isMagicAttacking = true;
             animator.SetTrigger("MagicAttack");
+
+            attackAudioSource.clip = magicAttackSound;
+            attackAudioSource.volume = attackVolume;
+            attackAudioSource.Play();
+
             float totalDamage = baseMagicAttackDamage + playerStats.magicDamage;
             DealDamage(totalDamage);
         }
@@ -293,42 +313,40 @@ public class PlayerController : MonoBehaviour
     {
         isMagicAttacking = false;
     }
-    private void AttackComboHandler()
-{
-    if (Input.GetKeyDown(attackKey) && !isDashing)
-    {
-        if (attackComboStage == 0 || comboTimer > 0)
-        {
-            attackComboStage = (attackComboStage % 3) + 1;  // Cycle through 1, 2, 3
-            animator.SetTrigger("Attack" + attackComboStage);  // This should match the triggers set in the Animator
-            comboTimer = maxComboDelay;  // Reset the combo timer
 
-            // Apply a small forward movement
-            float attackMoveDistance = 0.5f; // Adjust the distance as needed
-            float direction = isFacingRight ? 1 : -1;
-            rb.AddForce(new Vector2(direction * attackMoveDistance, 0), ForceMode2D.Impulse);
+    private void Attack()
+    {
+        if (Input.GetKeyDown(attackKey) && !isDashing && !isAttacking)
+        {
+            isAttacking = true;
+            animator.SetTrigger("Attack");
+
+            attackAudioSource.clip = attackSound;
+            attackAudioSource.volume = attackVolume;
+            attackAudioSource.Play();
+
+            float totalDamage = baseAttackDamage + playerStats.physicalDamage;
+            DealDamage(totalDamage);
         }
     }
-}
-
 
     public void ResetAttack()
     {
         isAttacking = false;
     }
+
     private void StartBlock()
     {
         isBlocking = true;
         animator.SetBool("Block", true); // Assume you have an "IsBlocking" bool parameter in your animator
-                                              // Additional logic to reduce damage or prevent movement, if needed
     }
 
     private void EndBlock()
     {
         isBlocking = false;
         animator.SetBool("Block", false);
-        // Reset any modified states or effects from blocking
     }
+
     private void PerformJumpAttack()
     {
         animator.SetTrigger("JumpAttack");
@@ -336,27 +354,24 @@ public class PlayerController : MonoBehaviour
 
     private void PerformTeleport()
     {
-        // Calculate new position in front of the character
         Vector3 teleportDirection = isFacingRight ? Vector3.right : Vector3.left;
         Vector3 newPosition = transform.position + teleportDirection * teleportDistance;
-
-        // Trigger teleport animation (make sure to create this in your Animator)
         animator.SetTrigger("Teleport");
-
-        // Optionally, you could wait for the animation to finish before moving the character
-        // This can be done using a Coroutine if the timing needs to be precise with the animation
         StartCoroutine(TeleportAfterDelay(newPosition, 0.5f)); // 0.5 seconds for example
     }
+
     IEnumerator TeleportAfterDelay(Vector3 newPosition, float delay)
     {
         yield return new WaitForSeconds(delay);
         transform.position = newPosition;
     }
+
     private void ToggleSleep()
     {
         isSleeping = !isSleeping; // Toggle the state
         animator.SetBool("Sleeping", isSleeping); // Tell the animator about the new state
     }
+
     private void DealDamage(float damage)
     {
         float attackRadius = 1f;
@@ -364,7 +379,7 @@ public class PlayerController : MonoBehaviour
         Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPosition, attackRadius);
         foreach (Collider2D enemy in hitEnemies)
         {
-            if (enemy.CompareTag("Enemy"))  
+            if (enemy.CompareTag("Enemy"))
             {
                 EnemyStats enemyStats = enemy.GetComponent<EnemyStats>();
                 if (enemyStats != null)
@@ -376,6 +391,7 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
+
     public void ExecuteAttackDamage()
     {
         float totalDamage;
@@ -391,6 +407,10 @@ public class PlayerController : MonoBehaviour
         {
             totalDamage = baseMagicAttackDamage + playerStats.magicDamage;
         }
+        else if (isAttacking)
+        {
+            totalDamage = baseAttackDamage + playerStats.physicalDamage;
+        }
         else
         {
             return; // No attack is being executed
@@ -401,7 +421,6 @@ public class PlayerController : MonoBehaviour
 
     public void CancelActions()
     {
-        // Cancel all attacks and movement-related actions
         isHeavyAttacking = false;
         isGunAttacking = false;
         isMagicAttacking = false;
@@ -409,7 +428,6 @@ public class PlayerController : MonoBehaviour
         isJumpAttacking = false;
         isDashing = false;
 
-        // Reset animator triggers or states if necessary
         animator.ResetTrigger("Dash");
         animator.ResetTrigger("Jump");
         animator.ResetTrigger("HeavyAttack");
@@ -418,10 +436,9 @@ public class PlayerController : MonoBehaviour
         animator.ResetTrigger("Attack");
         animator.SetBool("IsDashing", false);
 
-        // Stop the current movement
         rb.velocity = new Vector2(0, rb.velocity.y);
     }
-    // Example when an enemy hits the player
+
     void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Enemy"))

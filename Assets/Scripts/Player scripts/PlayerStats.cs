@@ -26,8 +26,6 @@ public class PlayerStats : MonoBehaviour
         {
             animator.SetTrigger("TakeDamage");
         }
-        // You can use attackSource here for additional effects like knockback
-
         if (currentHealth <= 0)
         {
             Die();
@@ -45,11 +43,7 @@ public class PlayerStats : MonoBehaviour
 
     private void Die()
     {
-        // Trigger the death animation
         animator.SetTrigger("Die");
-
-        // Optional: Disable player controls/movement here
-        GetComponent<PlayerController>().enabled = false; // Assuming Test is your player movement/control script.
-        // You might also want to disable other components or trigger other actions like playing a sound effect.
+        GetComponent<PlayerController>().enabled = false; 
     }
 }
