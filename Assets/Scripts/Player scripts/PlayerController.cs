@@ -22,9 +22,18 @@ public class PlayerController : MonoBehaviour
     private bool isSleeping = false;
     private bool isBlocking = false;
     private PlayerStats playerStats;
+<<<<<<< Updated upstream
     [SerializeField] private AudioSource movementAudioSource;
     [SerializeField] private AudioSource attackAudioSource;
     private Animator animator;
+=======
+    private AudioSource audioSource;
+    private int attackComboStage = 0;
+    private float comboTimer = 0;
+    private const float maxComboDelay = 0.5f;
+    public GameOverManager gameOverManager;
+
+>>>>>>> Stashed changes
 
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] private Transform groundCheck;
@@ -50,8 +59,14 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float attackVolume = 1f;
 
 
+    private Vector3 startPosition;
+    private Quaternion startRotation;
+    private Vector2 startVelocity;
+
+
     void Start()
     {
+<<<<<<< Updated upstream
         movementAudioSource = gameObject.AddComponent<AudioSource>();
         movementAudioSource.playOnAwake = false;
         movementAudioSource.loop = false;
@@ -62,6 +77,21 @@ public class PlayerController : MonoBehaviour
         attackAudioSource.loop = false;
         attackAudioSource.volume = attackVolume;
 
+=======
+
+        startPosition = transform.position;
+        startRotation = transform.rotation;
+        startVelocity = Vector2.zero;
+
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource == null)
+        {
+            Debug.LogWarning("AudioSource component not found on the player! Adding one.");
+            audioSource = gameObject.AddComponent<AudioSource>();
+        }
+        audioSource.playOnAwake = false;
+        audioSource.loop = false;
+>>>>>>> Stashed changes
         animator = GetComponent<Animator>();
         playerStats = GetComponent<PlayerStats>();
 
@@ -76,6 +106,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+<<<<<<< Updated upstream
 
     void Update()
     {
@@ -84,15 +115,37 @@ public class PlayerController : MonoBehaviour
         GunAttack();
         MagicAttack();
         Attack();
+=======
+void Update()
+{
+    if (!IsAlive)
+    {
+        rb.velocity = Vector2.zero; // Resetirajte brzinu kada igrač nije živ
+        gameOverManager.ShowGameOverScreen(); // Prikažite Game Over ekran
+        return;
+>>>>>>> Stashed changes
     }
+
+    HandleInput();
+    HeavyAttack();
+    GunAttack();
+    MagicAttack();
+    AttackComboHandler();
+}
 
     private void FixedUpdate()
     {
+    
         HandleMovement();
+        
+        animator.SetFloat(AnimationStrings.yVelocity, rb.velocity.y);
     }
 
     private void HandleInput()
+{
+    if (!IsAlive) 
     {
+<<<<<<< Updated upstream
         horizontal = Input.GetAxisRaw("Horizontal");
 
         if (Input.GetKeyDown(KeyCode.LeftShift) && Time.time > lastDashTime + dashCooldown && !isDashing)
@@ -140,10 +193,17 @@ public class PlayerController : MonoBehaviour
         {
             ToggleSleep();
         }
+=======
+        rb.velocity = Vector2.zero; 
+        return;
+>>>>>>> Stashed changes
     }
 
-    private void HandleMovement()
+    horizontal = Input.GetAxisRaw("Horizontal");
+
+    if (Input.GetKeyDown(KeyCode.LeftShift) && Time.time > lastDashTime + dashCooldown && !isDashing)
     {
+<<<<<<< Updated upstream
         if (isDashing)
         {
             return;
@@ -169,8 +229,90 @@ public class PlayerController : MonoBehaviour
         else if (!isMoving || !IsGrounded())
         {
             movementAudioSource.Stop();
+=======
+        animator.SetTrigger("Dash");
+        StartCoroutine(Dash());
+    }
+
+    if (Input.GetButtonDown("Jump") && IsGrounded() && !isClimbing)
+    {
+        Jump();
+    }
+
+    if (Input.GetButtonUp("Jump") && rb.velocity.y > 0)
+    {
+        CutJumpShort();
+    }
+    if (Input.GetKeyDown(KeyCode.E))
+    {
+        InteractWithObject();
+    }
+    if (Input.GetKeyDown(blockKey))
+    {
+        StartBlock();
+    }
+    if (Input.GetKeyUp(blockKey))
+    {
+        EndBlock();
+    }
+    if (Input.GetKeyDown(KeyCode.J) && !IsGrounded())
+    {
+        PerformJumpAttack();
+    }
+    if (Input.GetKeyDown(KeyCode.V))
+    {
+        PerformTeleport();
+    }
+    if (Input.GetKeyDown(KeyCode.N))
+    {
+        ToggleSleep();
+    }
+    if (comboTimer > 0)
+    {
+        comboTimer -= Time.deltaTime;
+        if (comboTimer <= 0 && attackComboStage != 0)
+        {
+            attackComboStage = 0;
+>>>>>>> Stashed changes
         }
     }
+}
+
+private void HandleMovement()
+{
+    if (!IsAlive) 
+    {
+        rb.velocity = Vector2.zero; 
+        return;
+    }
+
+    if (isDashing)  
+    {
+        return;
+    }
+
+    float move = horizontal * speed * runningMultiplier;
+    bool isMoving = Mathf.Abs(move) > 0;
+
+    rb.velocity = new Vector2(move, rb.velocity.y);
+    animator.SetFloat("Speed", Mathf.Abs(move));
+    animator.SetBool("IsRunning", isMoving);
+
+    Flip();
+
+    animator.SetBool("Grounded", IsGrounded());
+
+    if (isMoving && IsGrounded() && !audioSource.isPlaying)
+    {
+        audioSource.clip = runningSound;
+        audioSource.pitch = 1.5f;
+        audioSource.Play();
+    }
+    else if (!isMoving || !IsGrounded())
+    {
+        audioSource.Stop();
+    }
+}
 
 
 
@@ -452,4 +594,72 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
+
+    public bool CanMove {
+        get{
+            return animator.GetBool(AnimationStrings.canMove);
+        }
+    }
+
+    public bool IsAlive{
+        get
+        {
+            return animator.GetBool(AnimationStrings.isAlive);
+        }
+    }
+
+    public bool LockVelocity { get {
+        return animator.GetBool(AnimationStrings.lockVelocity);
+    } 
+    set{
+        animator.SetBool(AnimationStrings.lockVelocity, value);
+    }
+     }
+
+    public void ResetPlayer()
+    {
+        // Reset player's position, rotation, and velocity
+        transform.position = startPosition;
+        transform.rotation = startRotation;
+        rb.velocity = startVelocity;
+
+        // Reset all player-related states and variables
+        isFacingRight = true;
+        isDashing = false;
+        isHeavyAttacking = false;
+        isGunAttacking = false;
+        isMagicAttacking = false;
+        isAttacking = false;
+        isJumpAttacking = false;
+        isClimbing = false;
+        isSleeping = false;
+        isBlocking = false;
+        attackComboStage = 0;
+        comboTimer = 0;
+
+        // Reset animator parameters
+        animator.SetBool("IsRunning", false);
+        animator.SetBool("Grounded", true);
+        animator.SetBool("Block", false);
+        animator.SetBool("IsDashing", false);
+        animator.SetBool("Sleeping", false);
+        animator.SetBool("isAlive", true);
+        animator.SetBool("canMove", true);
+        animator.SetBool("isGrounded", false);
+
+       
+
+    }
+
+    public void OnHit(int damage, Vector2 knockback)
+    {
+        LockVelocity = true;
+        rb.velocity = new Vector2(knockback.x, rb.velocity.y + knockback.y);
+    }
+
+ 
+
+
+
+    
 }
