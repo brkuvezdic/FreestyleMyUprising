@@ -18,6 +18,10 @@ public class DoorInteraction : MonoBehaviour, IInteractable
 
     public void Interact()
     {
-        levelLoader.LoadNextLevel();
+        //njihov kod
+        //levelLoader.LoadNextLevel();
+                GameObject obj = GameObject.Find("PortalToShopppp");
+
+                StartCoroutine(levelLoader.LoadLevel(1));
     }
 }

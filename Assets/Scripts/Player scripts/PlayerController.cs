@@ -28,7 +28,7 @@ public class PlayerController : MonoBehaviour
     private float comboTimer = 0;
     private const float maxComboDelay = 0.5f;
     public GameOverManager gameOverManager;
-
+ public CoinManager cm;
 
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] private Transform groundCheck;
@@ -148,6 +148,11 @@ void Update()
     {
         PerformTeleport();
     }
+
+                if (Input.GetKeyDown(KeyCode.I))
+        {
+            ToggleCoinUI(); // Call a method to toggle the visibility of the coin UI
+        }
     if (Input.GetKeyDown(KeyCode.N))
     {
         ToggleSleep();
@@ -254,10 +259,28 @@ private void HandleMovement()
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        
         if (collision.CompareTag("Interactable"))
         {
             interactable = collision.GetComponent<IInteractable>();
         }
+
+        
+    if (collision.gameObject.CompareTag("Coin"))
+    {
+        Debug.Log("Coin picked up!"); // Log that a coin is picked up
+        Destroy(collision.gameObject);
+
+        // Log current coin count before updating
+        Debug.Log("Current coin count (before): " + CoinManager.instance.coinCount);
+
+        // Update coin count using the method
+        CoinManager.instance.UpdateCoinCount(CoinManager.instance.coinCount + 1);
+
+        // Log updated coin count
+        Debug.Log("Current coin count (after): " + CoinManager.instance.coinCount);
+        Debug.Log("CoinManager coin count: " + CoinManager.instance.coinCount);
+    }
     }
 
     private void OnTriggerExit2D(Collider2D collision)
@@ -528,6 +551,22 @@ private void HandleMovement()
     }
 
  
+
+    private void ToggleCoinUI()
+        {
+            // Assuming you have a canvas with a parent game object named "CoinUI" that contains all the UI elements related to coins
+            GameObject coinUI = GameObject.Find("CoinUI");
+
+            if (coinUI != null)
+            {
+                // Toggle the active state of the coin UI
+                coinUI.SetActive(!coinUI.activeSelf);
+            }
+            else
+            {
+                Debug.LogWarning("CoinUI game object not found. Make sure your canvas contains a parent game object named 'CoinUI'.");
+            }
+        }
 
 
 
