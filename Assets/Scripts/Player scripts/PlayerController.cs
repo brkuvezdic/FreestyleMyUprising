@@ -1,11 +1,12 @@
 using System.Collections;
+using UnityEditor.Experimental.RestService;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
     private float horizontal;
-    private float speed = 0.7f;  
-    private float runningMultiplier = 1.3f;  
+    private float speed = 0.7f;
+    private float runningMultiplier = 1.3f;
     private float jumpingPower = 2f;
     private bool isFacingRight = true;
     private bool isDashing = false;
@@ -23,12 +24,10 @@ public class PlayerController : MonoBehaviour
     private bool isSleeping = false;
     private bool isBlocking = false;
     private PlayerStats playerStats;
-    private AudioSource audioSource;
     private int attackComboStage = 0;
     private float comboTimer = 0;
     private const float maxComboDelay = 0.5f;
     public GameOverManager gameOverManager;
- public CoinManager cm;
 
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] private Transform groundCheck;
@@ -39,9 +38,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private KeyCode attackKey = KeyCode.Mouse0;
     [SerializeField] private KeyCode blockKey = KeyCode.Mouse1;
     [SerializeField] private float teleportDistance = 3f;
-    [SerializeField] private AudioClip walkingSound;
-    [SerializeField] private AudioClip runningSound;
-
 
     //attack Damage values mogu se mijenjat kasnije
     [SerializeField] private float baseHeavyAttackDamage = 20f;
@@ -52,22 +48,20 @@ public class PlayerController : MonoBehaviour
     private Quaternion startRotation;
     private Vector2 startVelocity;
 
+    private PlayerAudioManager audioManager;
 
     void Start()
     {
-
         startPosition = transform.position;
         startRotation = transform.rotation;
         startVelocity = Vector2.zero;
 
-        audioSource = GetComponent<AudioSource>();
-        if (audioSource == null)
+        audioManager = GetComponent<PlayerAudioManager>();
+        if (audioManager == null)
         {
-            Debug.LogWarning("AudioSource component not found on the player! Adding one.");
-            audioSource = gameObject.AddComponent<AudioSource>();
+            Debug.LogWarning("PlayerAudioManager component not found on the player!");
         }
-        audioSource.playOnAwake = false;
-        audioSource.loop = false;
+
         animator = GetComponent<Animator>();
         if (animator == null)
         {
@@ -80,129 +74,120 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-void Update()
-{
-    if (!IsAlive)
+    void Update()
     {
-        rb.velocity = Vector2.zero; // Resetirajte brzinu kada igrač nije živ
-        gameOverManager.ShowGameOverScreen(); // Prikažite Game Over ekran
-        return;
-    }
+        if (!IsAlive)
+        {
+            rb.velocity = Vector2.zero; // Resetirajte brzinu kada igrač nije živ
+            gameOverManager.ShowGameOverScreen(); // Prikažite Game Over ekran
+            return;
+        }
 
-    HandleInput();
-    HeavyAttack();
-    GunAttack();
-    MagicAttack();
-    AttackComboHandler();
-}
+        HandleInput();
+        HeavyAttack();
+        GunAttack();
+        MagicAttack();
+        AttackComboHandler();
+    }
 
     private void FixedUpdate()
     {
-    
         HandleMovement();
-        
         animator.SetFloat(AnimationStrings.yVelocity, rb.velocity.y);
     }
+
     private void HandleInput()
-{
-    if (!IsAlive) 
     {
-        rb.velocity = Vector2.zero; 
-        return;
-    }
-
-    horizontal = Input.GetAxisRaw("Horizontal");
-
-    if (Input.GetKeyDown(KeyCode.LeftShift) && Time.time > lastDashTime + dashCooldown && !isDashing)
-    {
-        animator.SetTrigger("Dash");
-        StartCoroutine(Dash());
-    }
-
-    if (Input.GetButtonDown("Jump") && IsGrounded() && !isClimbing)
-    {
-        Jump();
-    }
-
-    if (Input.GetButtonUp("Jump") && rb.velocity.y > 0)
-    {
-        CutJumpShort();
-    }
-    if (Input.GetKeyDown(KeyCode.E))
-    {
-        InteractWithObject();
-    }
-    if (Input.GetKeyDown(blockKey))
-    {
-        StartBlock();
-    }
-    if (Input.GetKeyUp(blockKey))
-    {
-        EndBlock();
-    }
-    if (Input.GetKeyDown(KeyCode.J) && !IsGrounded())
-    {
-        PerformJumpAttack();
-    }
-    if (Input.GetKeyDown(KeyCode.V))
-    {
-        PerformTeleport();
-    }
-
-                if (Input.GetKeyDown(KeyCode.I))
+        if (!IsAlive)
         {
-            ToggleCoinUI(); // Call a method to toggle the visibility of the coin UI
+            rb.velocity = Vector2.zero;
+            return;
         }
-    if (Input.GetKeyDown(KeyCode.N))
-    {
-        ToggleSleep();
-    }
-    if (comboTimer > 0)
-    {
-        comboTimer -= Time.deltaTime;
-        if (comboTimer <= 0 && attackComboStage != 0)
+
+        horizontal = Input.GetAxisRaw("Horizontal");
+
+        if (Input.GetKeyDown(KeyCode.LeftShift) && Time.time > lastDashTime + dashCooldown && !isDashing)
         {
-            attackComboStage = 0;
+            animator.SetTrigger("Dash");
+            StartCoroutine(Dash());
+        }
+
+        if (Input.GetButtonDown("Jump") && IsGrounded() && !isClimbing)
+        {
+            Jump();
+        }
+
+        if (Input.GetButtonUp("Jump") && rb.velocity.y > 0)
+        {
+            CutJumpShort();
+        }
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            InteractWithObject();
+        }
+        if (Input.GetKeyDown(blockKey))
+        {
+            StartBlock();
+        }
+        if (Input.GetKeyUp(blockKey))
+        {
+            EndBlock();
+        }
+        if (Input.GetKeyDown(KeyCode.J) && !IsGrounded())
+        {
+            PerformJumpAttack();
+        }
+        if (Input.GetKeyDown(KeyCode.V))
+        {
+            PerformTeleport();
+        }
+        if (Input.GetKeyDown(KeyCode.N))
+        {
+            ToggleSleep();
+        }
+        if (comboTimer > 0)
+        {
+            comboTimer -= Time.deltaTime;
+            if (comboTimer <= 0 && attackComboStage != 0)
+            {
+                attackComboStage = 0;
+            }
         }
     }
-}
 
-private void HandleMovement()
-{
-    if (!IsAlive) 
+    private void HandleMovement()
     {
-        rb.velocity = Vector2.zero; 
-        return;
+        if (!IsAlive)
+        {
+            rb.velocity = Vector2.zero;
+            return;
+        }
+
+        if (isDashing)
+        {
+            return;
+        }
+
+        float move = horizontal * speed * runningMultiplier;
+        bool isMoving = Mathf.Abs(move) > 0;
+
+        rb.velocity = new Vector2(move, rb.velocity.y);
+        animator.SetFloat("Speed", Mathf.Abs(move));
+        animator.SetBool("IsRunning", isMoving);
+
+        Flip();
+
+        animator.SetBool("Grounded", IsGrounded());
+
+        if (isMoving && IsGrounded() && !audioManager.IsPlaying())
+        {
+            audioManager.PlayRunningSound();
+        }
+        else if (!isMoving || !IsGrounded())
+        {
+            audioManager.StopSound();
+        }
     }
-
-    if (isDashing)  
-    {
-        return;
-    }
-
-    float move = horizontal * speed * runningMultiplier;
-    bool isMoving = Mathf.Abs(move) > 0;
-
-    rb.velocity = new Vector2(move, rb.velocity.y);
-    animator.SetFloat("Speed", Mathf.Abs(move));
-    animator.SetBool("IsRunning", isMoving);
-
-    Flip();
-
-    animator.SetBool("Grounded", IsGrounded());
-
-    if (isMoving && IsGrounded() && !audioSource.isPlaying)
-    {
-        audioSource.clip = runningSound;
-        audioSource.pitch = 1.5f;
-        audioSource.Play();
-    }
-    else if (!isMoving || !IsGrounded())
-    {
-        audioSource.Stop();
-    }
-}
-
 
 
     private IEnumerator Dash()
@@ -253,34 +238,18 @@ private void HandleMovement()
     {
         return Physics2D.OverlapCircle(groundCheck.position, 0.2f, groundlayer);
     }
+
     public interface IInteractable
     {
         void Interact();
     }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        
         if (collision.CompareTag("Interactable"))
         {
             interactable = collision.GetComponent<IInteractable>();
         }
-
-        
-    if (collision.gameObject.CompareTag("Coin"))
-    {
-        Debug.Log("Coin picked up!"); // Log that a coin is picked up
-        Destroy(collision.gameObject);
-
-        // Log current coin count before updating
-        Debug.Log("Current coin count (before): " + CoinManager.instance.coinCount);
-
-        // Update coin count using the method
-        CoinManager.instance.UpdateCoinCount(CoinManager.instance.coinCount + 1);
-
-        // Log updated coin count
-        Debug.Log("Current coin count (after): " + CoinManager.instance.coinCount);
-        Debug.Log("CoinManager coin count: " + CoinManager.instance.coinCount);
-    }
     }
 
     private void OnTriggerExit2D(Collider2D collision)
@@ -290,6 +259,7 @@ private void HandleMovement()
             interactable = null;
         }
     }
+
     private void InteractWithObject()
     {
         if (interactable != null)
@@ -301,6 +271,7 @@ private void HandleMovement()
             Debug.Log("No interactable object found.");
         }
     }
+
     private void HeavyAttack()
     {
         if (Input.GetKeyDown(heavyAttackKey) && !isDashing && !isHeavyAttacking) // Add other conditions as needed
@@ -315,6 +286,7 @@ private void HandleMovement()
     {
         isHeavyAttacking = false;
     }
+
     private void GunAttack()
     {
         if (Input.GetKeyDown(gunAttackKey) && !isDashing && !isGunAttacking)
@@ -330,6 +302,7 @@ private void HandleMovement()
     {
         isGunAttacking = false;
     }
+
     private void MagicAttack()
     {
         if (Input.GetKeyDown(magicAttackKey) && !isDashing && !isMagicAttacking)
@@ -345,42 +318,42 @@ private void HandleMovement()
     {
         isMagicAttacking = false;
     }
-    private void AttackComboHandler()
-{
-    if (Input.GetKeyDown(attackKey) && !isDashing)
-    {
-        if (attackComboStage == 0 || comboTimer > 0)
-        {
-            attackComboStage = (attackComboStage % 3) + 1;  // Cycle through 1, 2, 3
-            animator.SetTrigger("Attack" + attackComboStage);  // This should match the triggers set in the Animator
-            comboTimer = maxComboDelay;  // Reset the combo timer
 
-            // Apply a small forward movement
-            float attackMoveDistance = 0.5f; // Adjust the distance as needed
-            float direction = isFacingRight ? 1 : -1;
-            rb.AddForce(new Vector2(direction * attackMoveDistance, 0), ForceMode2D.Impulse);
+    private void AttackComboHandler()
+    {
+        if (Input.GetKeyDown(attackKey) && !isDashing)
+        {
+            if (attackComboStage == 0 || comboTimer > 0)
+            {
+                attackComboStage = (attackComboStage % 3) + 1;  // Cycle through 1, 2, 3
+                animator.SetTrigger("Attack" + attackComboStage);  // This should match the triggers set in the Animator
+                comboTimer = maxComboDelay;  // Reset the combo timer
+
+                // Apply a small forward movement
+                float attackMoveDistance = 0.5f; // Adjust the distance as needed
+                float direction = isFacingRight ? 1 : -1;
+                rb.AddForce(new Vector2(direction * attackMoveDistance, 0), ForceMode2D.Impulse);
+            }
         }
     }
-}
-
 
     public void ResetAttack()
     {
         isAttacking = false;
     }
+
     private void StartBlock()
     {
         isBlocking = true;
         animator.SetBool("Block", true); // Assume you have an "IsBlocking" bool parameter in your animator
-                                              // Additional logic to reduce damage or prevent movement, if needed
     }
 
     private void EndBlock()
     {
         isBlocking = false;
         animator.SetBool("Block", false);
-        // Reset any modified states or effects from blocking
     }
+
     private void PerformJumpAttack()
     {
         animator.SetTrigger("JumpAttack");
@@ -396,19 +369,21 @@ private void HandleMovement()
         animator.SetTrigger("Teleport");
 
         // Optionally, you could wait for the animation to finish before moving the character
-        // This can be done using a Coroutine if the timing needs to be precise with the animation
         StartCoroutine(TeleportAfterDelay(newPosition, 0.5f)); // 0.5 seconds for example
     }
+
     IEnumerator TeleportAfterDelay(Vector3 newPosition, float delay)
     {
         yield return new WaitForSeconds(delay);
         transform.position = newPosition;
     }
+
     private void ToggleSleep()
     {
         isSleeping = !isSleeping; // Toggle the state
         animator.SetBool("Sleeping", isSleeping); // Tell the animator about the new state
     }
+
     private void DealDamage(float damage)
     {
         float attackRadius = 1f;
@@ -416,18 +391,18 @@ private void HandleMovement()
         Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPosition, attackRadius);
         foreach (Collider2D enemy in hitEnemies)
         {
-            if (enemy.CompareTag("Enemy"))  
+            if (enemy.CompareTag("Enemy"))
             {
                 EnemyStats enemyStats = enemy.GetComponent<EnemyStats>();
                 if (enemyStats != null)
                 {
-
                     enemyStats.TakeDamage((int)damage, transform.position);
                     Debug.Log($"Dealt {damage} damage to {enemy.name}.");
                 }
             }
         }
     }
+
     public void ExecuteAttackDamage()
     {
         float totalDamage;
@@ -473,6 +448,7 @@ private void HandleMovement()
         // Stop the current movement
         rb.velocity = new Vector2(0, rb.velocity.y);
     }
+
     // Example when an enemy hits the player
     void OnCollisionEnter2D(Collision2D collision)
     {
@@ -484,30 +460,38 @@ private void HandleMovement()
                 float damage = enemyStats.attackDamage;
                 Vector3 attackSource = collision.transform.position;
                 playerStats.TakeDamage((int)damage, attackSource);
+                audioManager.PlayDamagedSound();
             }
         }
     }
 
-    public bool CanMove {
-        get{
+    public bool CanMove
+    {
+        get
+        {
             return animator.GetBool(AnimationStrings.canMove);
         }
     }
 
-    public bool IsAlive{
+    public bool IsAlive
+    {
         get
         {
             return animator.GetBool(AnimationStrings.isAlive);
         }
     }
 
-    public bool LockVelocity { get {
-        return animator.GetBool(AnimationStrings.lockVelocity);
-    } 
-    set{
-        animator.SetBool(AnimationStrings.lockVelocity, value);
+    public bool LockVelocity
+    {
+        get
+        {
+            return animator.GetBool(AnimationStrings.lockVelocity);
+        }
+        set
+        {
+            animator.SetBool(AnimationStrings.lockVelocity, value);
+        }
     }
-     }
 
     public void ResetPlayer()
     {
@@ -539,36 +523,12 @@ private void HandleMovement()
         animator.SetBool("isAlive", true);
         animator.SetBool("canMove", true);
         animator.SetBool("isGrounded", false);
-
-       
-
     }
 
     public void OnHit(int damage, Vector2 knockback)
     {
         LockVelocity = true;
         rb.velocity = new Vector2(knockback.x, rb.velocity.y + knockback.y);
+        audioManager.PlayDamagedSound();
     }
-
- 
-
-    private void ToggleCoinUI()
-        {
-            // Assuming you have a canvas with a parent game object named "CoinUI" that contains all the UI elements related to coins
-            GameObject coinUI = GameObject.Find("CoinUI");
-
-            if (coinUI != null)
-            {
-                // Toggle the active state of the coin UI
-                coinUI.SetActive(!coinUI.activeSelf);
-            }
-            else
-            {
-                Debug.LogWarning("CoinUI game object not found. Make sure your canvas contains a parent game object named 'CoinUI'.");
-            }
-        }
-
-
-
-    
 }

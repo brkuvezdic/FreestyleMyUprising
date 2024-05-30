@@ -40,7 +40,7 @@ PolygonCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1121340637785963677}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Density: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -116,7 +116,8 @@ GameObject:
   - component: {fileID: 6854367891386005091}
   - component: {fileID: 278403794764603604}
   - component: {fileID: 642674291517131851}
-  m_Layer: 0
+  - component: {fileID: 4872282103553535503}
+  m_Layer: 8
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -299,8 +300,6 @@ MonoBehaviour:
   attackKey: 323
   blockKey: 324
   teleportDistance: 1
-  walkingSound: {fileID: 8300000, guid: 02dc709a1e386674e8d05d3c04baa6f7, type: 3}
-  runningSound: {fileID: 8300000, guid: 02dc709a1e386674e8d05d3c04baa6f7, type: 3}
   baseHeavyAttackDamage: 20
   baseGunAttackDamage: 15
   baseMagicAttackDamage: 25
@@ -460,11 +459,32 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  damagableDeath:
+    m_PersistentCalls:
+      m_Calls: []
+  healthChanged:
+    m_PersistentCalls:
+      m_Calls: []
   _maxHealth: 100
   _health: 100
   _isAlive: 1
   isInvincible: 0
   invicibilityTimer: 1
+--- !u!114 &4872282103553535503
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4810058417461029183}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8b6cbc006b037c4c918f892fc33d041, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  walkingSound: {fileID: 0}
+  runningSound: {fileID: 8300000, guid: 02dc709a1e386674e8d05d3c04baa6f7, type: 3}
+  damagedSound: {fileID: 8300000, guid: 2e2bf3c801e778e4684709ffb4c724cd, type: 3}
 --- !u!1 &6772721341042855540
 GameObject:
   m_ObjectHideFlags: 0
