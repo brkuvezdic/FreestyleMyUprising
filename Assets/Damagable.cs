@@ -64,6 +64,10 @@ public class Damagable : MonoBehaviour
         animator.SetBool(AnimationStrings.isAlive, value);
         Debug.Log("IsAlive set " + value);
 
+        if(!value){
+            damagableDeath.Invoke();
+        }
+
     } }
 
         public bool LockVelocity { get {
