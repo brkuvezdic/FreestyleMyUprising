@@ -54,4 +54,9 @@ public class CoinManager : MonoBehaviour
     {
         coinCount = newCoinCount;
     }
+    // Method to add coins
+    public void AddCoins(int amount)
+    {
+        coinCount += amount;
+    }
 }
