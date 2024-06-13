@@ -9,6 +9,9 @@ EditorBuildSettings:
     path: Assets/Scenes/MainMenu.unity
     guid: ca7f013a10aef47528898130f0eb78e9
   - enabled: 1
+    path: Assets/Scenes/HUBarea-Mirna.unity
+    guid: 7c7c1136198394df5a3160c25e8403e1
+  - enabled: 1
     path: Assets/Scenes/Gameplay1 - level2.unity
     guid: fb14795ab606e42988941c475e6ed7b0
   - enabled: 1
@@ -20,4 +23,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Level1area2.unity
     guid: 94b4e091a577c2e4fab401e0f7b90e49
+  - enabled: 1
+    path: Assets/Scenes/Level2area2.unity
+    guid: 59119b00a30172643a4c5da00a3a86ef
   m_configObjects: {}
