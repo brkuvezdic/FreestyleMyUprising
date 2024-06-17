@@ -7,6 +7,9 @@ public class GoToShop : MonoBehaviour, IInteractable
     public LevelLoader levelLoader;
     public AudioSource doorAudioSource;
 
+     public int shopSceneIndex;
+    public int otherSceneIndex;
+
     private void Awake()
     {
         levelLoader = FindObjectOfType<LevelLoader>();
@@ -17,14 +20,21 @@ public class GoToShop : MonoBehaviour, IInteractable
         }
     }
 
-    public void Interact()
+   public void Interact()
     {
-        // Find the object with the specified name
-        GameObject obj = GameObject.Find("PortalToShopppp");
-
-                StartCoroutine(levelLoader.LoadLevel(5));
-           
-
- 
+        // Check the name of the GameObject this script is attached to
+        if (gameObject.name == "PortalToShopppp")
+        {
+            StartCoroutine(levelLoader.LoadLevel(5)); // Load the shop scene
+        }
+        else if (gameObject.name == "Portal za testiranje healtha")
+        {
+            StartCoroutine(levelLoader.LoadLevel(2)); // Load the other scene
+        }
+        else
+        {
+            Debug.LogWarning("Unknown portal name: " + gameObject.name);
+        }
     }
+
 }

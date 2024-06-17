@@ -15,12 +15,14 @@ public class CoinManager : MonoBehaviour
         if (instance == null)
         {
             instance = this;
-            DontDestroyOnLoad(gameObject); // Persist across scene changes
+            DontDestroyOnLoad(gameObject);
         }
-        else
+        else if (instance != this)
         {
-            Destroy(gameObject); // Destroy duplicate instances
+            Destroy(gameObject);
         }
+
+        LoadCoinCount(); // Load coin count on awake
     }
 
     void Start()
@@ -28,35 +30,47 @@ public class CoinManager : MonoBehaviour
         UpdateCoinText();
     }
 
-    void Update()
+    public void UpdateCoinCount(int value)
     {
+        coinCount = value;
         UpdateCoinText();
+        SaveCoinCount(); // Save coin count whenever it's updated
     }
 
-    // Function to update the coin UI text
     void UpdateCoinText()
     {
-        // Check if the coinText field is assigned
         if (coinText != null)
         {
             coinText.text = "Coins: " + coinCount.ToString();
         }
+        else
+        {
+            Debug.LogWarning("Coin text UI component not assigned.");
+        }
     }
 
-    // Method to set the coinText field dynamically
-    public void SetCoinText(Text text)
+    // Save coin count to PlayerPrefs
+    void SaveCoinCount()
     {
-        coinText = text;
+        PlayerPrefs.SetInt("CoinCount", coinCount);
+        PlayerPrefs.Save();
     }
 
-    // Method to update the coin count
-    public void UpdateCoinCount(int newCoinCount)
+    // Load coin count from PlayerPrefs
+    void LoadCoinCount()
     {
-        coinCount = newCoinCount;
+        if (PlayerPrefs.HasKey("CoinCount"))
+        {
+            coinCount = PlayerPrefs.GetInt("CoinCount");
+        }
     }
-    // Method to add coins
+
+    // Example method to add coins (can be called from other scripts)
     public void AddCoins(int amount)
     {
         coinCount += amount;
+        UpdateCoinCount(coinCount);
     }
+
+
 }

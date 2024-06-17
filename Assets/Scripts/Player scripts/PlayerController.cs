@@ -28,6 +28,8 @@ public class PlayerController : MonoBehaviour
     private float comboTimer = 0;
     private const float maxComboDelay = 0.5f;
     public GameOverManager gameOverManager;
+        private CoinManager coinManager; // Add this line
+    private ShopManagerScript shopManager; // Add this line
 
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] private Transform groundCheck;
@@ -72,6 +74,18 @@ public class PlayerController : MonoBehaviour
         {
             Debug.LogWarning("PlayerStats component not found on the player!");
         }
+
+         coinManager = CoinManager.instance; 
+        if (coinManager == null)
+        {
+            Debug.LogWarning("CoinManager instance not found!");
+        }
+
+        shopManager = FindObjectOfType<ShopManagerScript>(); 
+        if (shopManager == null)
+        {
+            Debug.LogWarning("ShopManagerScript instance not found!");
+        }
     }
 
     void Update()
@@ -88,6 +102,11 @@ public class PlayerController : MonoBehaviour
         GunAttack();
         MagicAttack();
         AttackComboHandler();
+
+                if (Input.GetKeyDown(KeyCode.I))
+        {
+            LogPurchases(); // Log purchases on 'I' key press
+        }
     }
 
     private void FixedUpdate()
@@ -250,6 +269,22 @@ public class PlayerController : MonoBehaviour
         {
             interactable = collision.GetComponent<IInteractable>();
         }
+
+        if (collision.gameObject.CompareTag("Coin"))
+    {
+        Debug.Log("Coin picked up!"); // Log that a coin is picked up
+        Destroy(collision.gameObject);
+
+        // Log current coin count before updating
+        Debug.Log("Current coin count (before): " + CoinManager.instance.coinCount);
+
+        // Update coin count using the method
+        CoinManager.instance.UpdateCoinCount(CoinManager.instance.coinCount + 1);
+
+        // Log updated coin count
+        Debug.Log("Current coin count (after): " + CoinManager.instance.coinCount);
+        Debug.Log("CoinManager coin count: " + CoinManager.instance.coinCount);
+    }
     }
 
     private void OnTriggerExit2D(Collider2D collision)
@@ -530,5 +565,17 @@ public class PlayerController : MonoBehaviour
         LockVelocity = true;
         rb.velocity = new Vector2(knockback.x, rb.velocity.y + knockback.y);
         audioManager.PlayDamagedSound();
+    }
+
+    public void LogPurchases()
+    {
+        if (shopManager != null)
+        {
+            shopManager.LogPurchase();
+        }
+        else
+        {
+            Debug.LogWarning("ShopManagerScript instance not found!");
+        }
     }
 }
