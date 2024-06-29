@@ -1,5 +1,5 @@
 // DoorInteraction.cs
-using UnityEngine;
+/*using UnityEngine;
 using static PlayerController;
 
 public class GoToShop : MonoBehaviour, IInteractable
@@ -37,4 +37,4 @@ public class GoToShop : MonoBehaviour, IInteractable
         }
     }
 
-}
+}*/

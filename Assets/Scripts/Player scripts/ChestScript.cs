@@ -1,4 +1,4 @@
-using UnityEngine;
+/*using UnityEngine;
 
 public class InteractableCoinChest : MonoBehaviour, PlayerController.IInteractable
 {
@@ -20,3 +20,4 @@ public class InteractableCoinChest : MonoBehaviour, PlayerController.IInteractab
         }
     }
 }
+*/

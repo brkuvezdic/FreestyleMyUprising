@@ -1,4 +1,4 @@
-using UnityEngine;
+/*using UnityEngine;
 
 public class Door : MonoBehaviour, PlayerController.IInteractable
 {
@@ -47,3 +47,4 @@ public class Door : MonoBehaviour, PlayerController.IInteractable
     }
 
 }
+*/

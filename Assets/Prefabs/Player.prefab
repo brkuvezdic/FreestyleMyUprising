@@ -303,6 +303,7 @@ MonoBehaviour:
   baseHeavyAttackDamage: 20
   baseGunAttackDamage: 15
   baseMagicAttackDamage: 25
+  baseAttackDamage: 150
 --- !u!114 &1984012603499055371
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -485,6 +486,16 @@ MonoBehaviour:
   walkingSound: {fileID: 0}
   runningSound: {fileID: 8300000, guid: 02dc709a1e386674e8d05d3c04baa6f7, type: 3}
   damagedSound: {fileID: 8300000, guid: 2e2bf3c801e778e4684709ffb4c724cd, type: 3}
+  jumpSound: {fileID: 0}
+  heavyAttackSound: {fileID: 8300000, guid: f609995ddf18554438c0c2899a9085fe, type: 3}
+  gunAttackSound: {fileID: 8300000, guid: e70eb034c8ae4fe42b00d809716998e4, type: 3}
+  magicAttackSound: {fileID: 8300000, guid: 8cc8b62211f9fa149b63f3032ed815b0, type: 3}
+  attackSound: {fileID: 0}
+  blockSound: {fileID: 0}
+  jumpAttackSound: {fileID: 0}
+  teleportSound: {fileID: 8300000, guid: 23d80b5297162e9459fea98d1bec36f4, type: 3}
+  dashSound: {fileID: 0}
+  sleepSound: {fileID: 0}
 --- !u!1 &6772721341042855540
 GameObject:
   m_ObjectHideFlags: 0

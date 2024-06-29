@@ -1,4 +1,4 @@
-using UnityEngine;
+/*using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -10,7 +10,7 @@ public class GameOverManager : MonoBehaviour
     public Button restartButton;
     public Button mainMenuButton;
     public Button quitButton;
-    public PlayerController playerController;
+
 
     [Header("Pause")]
     public GameObject pauseScreen;
@@ -89,7 +89,6 @@ public class GameOverManager : MonoBehaviour
         
     }
     #endregion
-}
-
+}*/
 
 

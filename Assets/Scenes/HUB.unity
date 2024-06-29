@@ -1217,7 +1217,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelLoader: {fileID: 1896689970}
   doorAudioSource: {fileID: 0}
-  shopSceneIndex: 0
+  shopSceneIndex: 7
   otherSceneIndex: 0
 --- !u!1 &239131061
 GameObject:
@@ -2666,7 +2666,7 @@ Transform:
   m_GameObject: {fileID: 611116832}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -19.679173, y: -4.3519998, z: -10.0216}
+  m_LocalPosition: {x: -19.45854, y: -4.3519998, z: -10.0216}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2890,7 +2890,7 @@ Transform:
   m_GameObject: {fileID: 776500693}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -19.679173, y: -4.3519998, z: -10.0216}
+  m_LocalPosition: {x: -19.45854, y: -4.3519998, z: -10.0216}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
