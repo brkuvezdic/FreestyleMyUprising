@@ -43,3 +43,9 @@
 
 ---
 
+
+## Documentation
+
+[View Project Documentation](https://github.com/brkuvezdic/FreestyleMyUprising/blob/main/Freestyle%20My%20Uprising%20documentation.pdf)
+
+
